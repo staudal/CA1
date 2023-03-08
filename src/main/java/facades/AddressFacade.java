@@ -52,7 +52,4 @@ public class AddressFacade {
         }
     }
 
-    // Get address from addressId
-
-
 }
