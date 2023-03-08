@@ -32,7 +32,7 @@ public class PersonResource {
     }
 
     @GET
-    @Path("person/{phone}")
+    @Path("/{phone}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPersonByPhone(@PathParam("phone") String phone) {
         PersonDTO person = personFacade.getPersonByPhone(phone);
