@@ -1,24 +1,26 @@
 package facades;
 
+import dtos.AddressDTO;
 import dtos.PersonDTO;
-import entities.Person;
+import entities.*;
+import org.junit.jupiter.api.*;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static rest.PersonResource.*;
 
 public class PersonFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static PersonFacade facade;
+    private static PersonFacade personFacade;
+    private static HobbyFacade hobbyFacade;
+    private static AddressFacade addressFacade;
+    private static CityInfoFacade cityInfoFacade;
 
     public PersonFacadeTest() {
     }
@@ -26,7 +28,10 @@ public class PersonFacadeTest {
     @BeforeAll
     public static void setUpClass() {
        emf = EMF_Creator.createEntityManagerFactoryForTest();
-       facade = PersonFacade.getPersonFacade(emf);
+       personFacade = PersonFacade.getPersonFacade(emf);
+       hobbyFacade = HobbyFacade.getHobbyFacade(emf);
+       addressFacade = AddressFacade.getAddressFacade(emf);
+       cityInfoFacade = CityInfoFacade.getCityInfoFacade(emf);
     }
 
     @AfterAll
@@ -37,21 +42,46 @@ public class PersonFacadeTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        Person p1 = new Person("email@email.dk", "FName", "LName");
-        try {
-            em.getTransaction().begin();
-            em.persist(p1);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+        em.getTransaction().begin();
+
+        // Creates a cityInfo object
+        CityInfo cityInfo = new CityInfo(1234, "testCity");
+        em.persist(cityInfo);
+
+        // Creates an address object
+        Address address = new Address("testStreet", "testAdditionalInfo");
+        address.setCityInfo(cityInfo);
+        em.persist(address);
+
+        // Creates a hobby object
+        Hobby hobby = new Hobby("testHobby", "testDescription");
+
+        // Creates a person object
+        Person person = new Person("john@doe.dk", "John", "Doe");
+        person.setAddress(address);
+        person.setHobbies(List.of(hobby));
+        em.persist(person);
+
+        // Persists the hobby object
+        hobby.setPersons(List.of(person));
+        em.persist(hobby);
+
+        // Creates a phone object
+        Phone phone = new Phone("12345678", "testDescription");
+        phone.setPerson(person);
+        em.persist(phone);
+
+        // Creates the person/hobby relationship
+
+
+        em.getTransaction().commit();
     }
 
-    @AfterEach
-    public void tearDown() {
-
+    // Test that checks if a person is created
+    @Test
+    public void testGetPersonByPhone() {
+        PersonDTO personDTO = personFacade.getPersonByPhone("12345678");
+        System.out.println(personDTO.getAddress().getStreet());
     }
 
 }

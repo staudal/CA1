@@ -10,7 +10,9 @@ import javax.persistence.TypedQuery;
 
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 public class PersonFacade {
@@ -31,7 +33,7 @@ public class PersonFacade {
     }
 
     // Creating a new Person
-    public void create(PersonDTO personDTO) {
+    public PersonDTO create(PersonDTO personDTO) {
         Person person = new Person(personDTO.getEmail(), personDTO.getFirstName(), personDTO.getLastName());
         EntityManager em = getEntityManager();
         try {
@@ -41,6 +43,7 @@ public class PersonFacade {
         } finally {
             em.close();
         }
+        return new PersonDTO(person);
     }
 
     // Adding a Hobby to a Person
@@ -78,6 +81,19 @@ public class PersonFacade {
         } finally {
             em.close();
         }
+    }
+
+    // Gets the number of persons in the database
+    public int getPersonCount() {
+        Set<Person> persons = new HashSet<>();
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+            persons.addAll(query.getResultList());
+        } finally {
+            em.close();
+        }
+        return persons.size();
     }
 
 }
