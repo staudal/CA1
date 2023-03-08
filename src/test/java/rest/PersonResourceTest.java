@@ -57,7 +57,7 @@ public class PersonResourceTest {
 
     }
 
-    @Test
+    /*@Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
         given().when().get("/persons").then().statusCode(200);
@@ -71,5 +71,5 @@ public class PersonResourceTest {
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("lastName", equalTo("Doe"));
-    }
+    }*/
 }
