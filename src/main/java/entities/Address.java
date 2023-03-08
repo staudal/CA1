@@ -28,6 +28,12 @@ public class Address {
     @OneToMany(mappedBy = "address", cascade = CascadeType.PERSIST)
     private List<Person> persons;
 
+    @JoinColumn(name = "cityInfo_id")
     @ManyToOne
     private CityInfo cityInfo;
+
+    public Address(String street, String additionalInfo) {
+        this.street = street;
+        this.additionalInfo = additionalInfo;
+    }
 }

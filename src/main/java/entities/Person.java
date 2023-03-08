@@ -14,12 +14,6 @@ import java.util.List;
 @Table(name = "Persons")
 public class Person {
 
-    public Person(String email, String firstName, String lastName) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -45,6 +39,13 @@ public class Person {
     )
     private List<Hobby> hobbies;
 
+    @JoinColumn(name = "address_id")
     @ManyToOne
     private Address address;
+
+    public Person(String email, String firstName, String lastName) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

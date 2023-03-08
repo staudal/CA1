@@ -27,4 +27,9 @@ public class Hobby {
 
     @ManyToMany(mappedBy = "hobbies", cascade = CascadeType.PERSIST)
     private List<Person> persons;
+
+    public Hobby(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

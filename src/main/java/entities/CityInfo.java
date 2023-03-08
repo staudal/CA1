@@ -27,4 +27,9 @@ public class CityInfo {
 
     @OneToMany(mappedBy = "cityInfo", cascade = CascadeType.PERSIST)
     private List<Address> addresses;
+
+    public CityInfo(int zipCode, String city) {
+        this.zipCode = zipCode;
+        this.city = city;
+    }
 }

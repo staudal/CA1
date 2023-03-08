@@ -24,6 +24,12 @@ public class Phone {
     @Column(name = "description")
     private String description;
 
+    @JoinColumn(name = "person_id")
     @ManyToOne
     private Person person;
+
+    public Phone(String number, String description) {
+        this.number = number;
+        this.description = description;
+    }
 }

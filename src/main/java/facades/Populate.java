@@ -1,21 +1,26 @@
 package facades;
 
+import dtos.HobbyDTO;
 import dtos.PersonDTO;
+import entities.Hobby;
 import entities.Person;
+import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
-import utils.EMF_Creator;
 
 public class Populate {
     public static void populate(){
         EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
-        PersonFacade personFacade = PersonFacade.getFacadeExample(emf);
+        HobbyFacade hobbyFacade = HobbyFacade.getHobbyFacade(emf);
+        PersonFacade personFacade = PersonFacade.getPersonFacade(emf);
 
-        PersonDTO personDTO1 = new PersonDTO("test@test.dk", "Test", "Testesen");
-        PersonDTO personDTO2 = new PersonDTO("test2@test.dk", "Test2", "Testesen2");
+        PersonDTO personDTO = new PersonDTO("email@email.dk", "John", "Doe");
+        HobbyDTO hobbyDTO = new HobbyDTO("Hobby", "Description");
 
-        personFacade.create(personDTO1);
-        personFacade.create(personDTO2);
+        personFacade.create(personDTO);
+        hobbyFacade.create(hobbyDTO);
+
+        personFacade.addHobby(1L, 1L);
     }
     
     public static void main(String[] args) {
