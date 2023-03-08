@@ -1,7 +1,9 @@
 package facades;
 
 import dtos.AddressDTO;
+import dtos.PersonDTO;
 import entities.Address;
+import entities.Person;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -38,5 +40,19 @@ public class AddressFacade {
         }
         return new AddressDTO(address);
     }
+
+    // Get address from personDTO
+    public AddressDTO getAddressFromPerson(PersonDTO personDTO) {
+        EntityManager em = getEntityManager();
+        Person person = em.find(Person.class, personDTO.getId());
+        try {
+            return new AddressDTO(em.find(Address.class, person.getAddress().getId()));
+        } finally {
+            em.close();
+        }
+    }
+
+    // Get address from addressId
+
 
 }

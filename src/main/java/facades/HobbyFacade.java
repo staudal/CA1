@@ -1,11 +1,14 @@
 package facades;
 
 import dtos.HobbyDTO;
+import dtos.PersonDTO;
 import entities.Hobby;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @NoArgsConstructor
 public class HobbyFacade {
@@ -37,6 +40,19 @@ public class HobbyFacade {
             em.close();
         }
         return new HobbyDTO(hobby);
+    }
+
+    // Get all hobbies by personDTO
+    public List<HobbyDTO> getAllHobbiesByPerson(PersonDTO personDTO) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Hobby> query = em.createQuery("SELECT h FROM Hobby h JOIN h.persons p WHERE p.id = :id", Hobby.class);
+            query.setParameter("id", personDTO.getId());
+            List<Hobby> hobbies = query.getResultList();
+            return HobbyDTO.getDTOs(hobbies);
+        } finally {
+            em.close();
+        }
     }
 
 }

@@ -10,14 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class PersonDTO {
 
+    private Long id;
     private String email;
     private String firstName;
     private String lastName;
+    private AddressDTO address;
+    private List<HobbyDTO> hobbies;
     
     public static List<PersonDTO> getDTOs(List<Person> persons){
         List<PersonDTO> personDTOs = new ArrayList();
@@ -26,9 +28,15 @@ public class PersonDTO {
     }
 
     public PersonDTO(Person person) {
+        this.id = person.getId();
         this.email = person.getEmail();
         this.firstName = person.getFirstName();
         this.lastName = person.getLastName();
     }
 
+    public PersonDTO(String email, String firstName, String lastName) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }

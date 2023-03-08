@@ -1,6 +1,7 @@
 package rest;
 
 import entities.Person;
+import facades.PersonFacade;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -59,26 +60,16 @@ public class PersonResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/xxx").then().statusCode(200);
+        given().when().get("/persons").then().statusCode(200);
     }
 
     @Test
-    public void testDummyMsg() throws Exception {
+    public void testPersonByPhone() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/xxx/").then()
+                .get("/persons/person/12345678").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("msg", equalTo("Hello World"));
-    }
-
-    @Test
-    public void testCount() throws Exception {
-        given()
-                .contentType("application/json")
-                .get("/xxx/count").then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("count", equalTo(2));
+                .body("lastName", equalTo("Doe"));
     }
 }

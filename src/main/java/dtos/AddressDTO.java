@@ -16,8 +16,10 @@ import java.util.List;
 @Setter
 public class AddressDTO {
 
+    private Long id;
     private String street;
     private String additionalInfo;
+    private CityInfoDTO cityInfo;
 
     public static List<AddressDTO> getDTOs(List<Address> addresses){
         List<AddressDTO> addressDTOs = new ArrayList();
@@ -26,6 +28,7 @@ public class AddressDTO {
     }
 
     public AddressDTO(Address address) {
+        this.id = address.getId();
         this.street = address.getStreet();
         this.additionalInfo = address.getAdditionalInfo();
     }

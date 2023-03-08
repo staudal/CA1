@@ -1,7 +1,9 @@
 package facades;
 
 import dtos.CityInfoDTO;
+import dtos.PersonDTO;
 import entities.CityInfo;
+import entities.Person;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -37,6 +39,17 @@ public class CityInfoFacade {
             em.close();
         }
         return new CityInfoDTO(cityInfo);
+    }
+
+    // Get city from personDTO
+    public CityInfoDTO getCityFromPerson (PersonDTO personDTO) {
+        EntityManager em = getEntityManager();
+        Person person = em.find(Person.class, personDTO.getId());
+        try {
+            return new CityInfoDTO(em.find(CityInfo.class, person.getAddress().getCityInfo().getId()));
+        } finally {
+            em.close();
+        }
     }
 
 }

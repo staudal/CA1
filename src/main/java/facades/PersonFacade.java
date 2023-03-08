@@ -6,8 +6,11 @@ import entities.Person;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor
 public class PersonFacade {
@@ -53,4 +56,28 @@ public class PersonFacade {
             em.close();
         }
     }
+
+    // Find all persons
+    public List<PersonDTO> getAllPersons() {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p", Person.class);
+            return PersonDTO.getDTOs(query.getResultList());
+        } finally {
+            em.close();
+        }
+    }
+
+    // Get information about a person given a phone number
+    public PersonDTO getPersonByPhone(String phone) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class);
+            query.setParameter("phone", phone);
+            return new PersonDTO(query.getSingleResult());
+        } finally {
+            em.close();
+        }
+    }
+
 }
