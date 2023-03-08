@@ -36,4 +36,5 @@ public class Address {
         this.street = street;
         this.additionalInfo = additionalInfo;
     }
+
 }

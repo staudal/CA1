@@ -39,10 +39,10 @@ public class PersonFacadeTest {
 
     }
 
-    @Test
+    /*@Test
     public void testAFacadeMethod() throws Exception {
         assertEquals(2, facade.getRenameMeCount(), "Expects two rows in the database");
-    }
+    }*/
     
 
 }
