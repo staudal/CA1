@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
+import errorhandling.ExceptionDTO;
 import lombok.NoArgsConstructor;
 import utils.EMF_Creator;
 
@@ -73,7 +74,7 @@ public class PersonFacade {
     }
 
     // Get information about a person given a phone number
-    public PersonDTO getPersonByPhone(String phone) {
+    public PersonDTO getPersonByPhone(String phone) throws Exception {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class);

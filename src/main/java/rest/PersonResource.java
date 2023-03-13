@@ -35,7 +35,7 @@ public class PersonResource {
     @GET
     @Path("/phone/{phone}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getPersonByPhone(@PathParam("phone") String phone) {
+    public Response getPersonByPhone(@PathParam("phone") String phone) throws Exception {
         PersonDTO person = personFacade.getPersonByPhone(phone);
         person.setHobbies(hobbyFacade.getAllHobbiesByPerson(person));
         AddressDTO address = addressFacade.getAddressFromPerson(person);
@@ -59,15 +59,6 @@ public class PersonResource {
     }
 
     @GET
-    @Path("/count/hobby/{hobby}")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getPersonByHobbyCount(@PathParam("hobby") String hobby) {
-        List<PersonDTO> personDTOs = personFacade.getPersonsWithHobby(hobby);
-        int count = personDTOs.size();
-        return Response.ok().entity(GSON.toJson(count)).build();
-    }
-
-    @GET
     @Path("/zip/{zip}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPersonByZipCode(@PathParam("zip") String zipCode) {
@@ -82,10 +73,12 @@ public class PersonResource {
     }
 
     @GET
-    @Path("/zip/all")
+    @Path("/count/hobby/{hobby}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAllZipCodes() {
-        return Response.ok().entity(GSON.toJson(cityInfoFacade.getAllZipCodes())).build();
+    public Response getPersonByHobbyCount(@PathParam("hobby") String hobby) {
+        List<PersonDTO> personDTOs = personFacade.getPersonsWithHobby(hobby);
+        int count = personDTOs.size();
+        return Response.ok().entity(GSON.toJson(count)).build();
     }
 
     @PUT

@@ -76,7 +76,7 @@ public class PersonFacadeTest {
 
     // Test that checks if a person is created
     @Test
-    public void testGetPersonByPhone() {
+    public void testGetPersonByPhone() throws Exception {
         PersonDTO personDTO = personFacade.getPersonByPhone("12345678");
         System.out.println(personDTO.getAddress().getStreet());
     }
