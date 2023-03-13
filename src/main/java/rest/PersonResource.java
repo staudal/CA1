@@ -33,7 +33,7 @@ public class PersonResource {
     }
 
     @GET
-    @Path("/{phone}")
+    @Path("/phone/{phone}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPersonByPhone(@PathParam("phone") String phone) {
         PersonDTO person = personFacade.getPersonByPhone(phone);
@@ -45,7 +45,7 @@ public class PersonResource {
     }
 
     @GET
-    @Path("/{hobby}")
+    @Path("/hobby/{hobby}")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getPersonByHobby(@PathParam("hobby") String hobby) {
         List<PersonDTO> personDTOs = personFacade.getPersonsWithHobby(hobby);
