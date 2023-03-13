@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dtos.AddressDTO;
 import dtos.PersonDTO;
+import errorhandling.PersonNotFoundException;
 import facades.AddressFacade;
 import facades.CityInfoFacade;
 import facades.HobbyFacade;
@@ -35,7 +36,7 @@ public class PersonResource {
     @GET
     @Path("/phone/{phone}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getPersonByPhone(@PathParam("phone") String phone) throws Exception {
+    public Response getPersonByPhone(@PathParam("phone") String phone) throws PersonNotFoundException {
         PersonDTO person = personFacade.getPersonByPhone(phone);
         person.setHobbies(hobbyFacade.getAllHobbiesByPerson(person));
         AddressDTO address = addressFacade.getAddressFromPerson(person);

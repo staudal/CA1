@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
 import errorhandling.ExceptionDTO;
+import errorhandling.PersonNotFoundException;
 import lombok.NoArgsConstructor;
 import utils.EMF_Creator;
 
@@ -74,12 +75,15 @@ public class PersonFacade {
     }
 
     // Get information about a person given a phone number
-    public PersonDTO getPersonByPhone(String phone) throws Exception {
+    public PersonDTO getPersonByPhone(String phone) throws PersonNotFoundException {
         EntityManager em = getEntityManager();
         try {
             TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.phones ph WHERE ph.number = :phone", Person.class);
             query.setParameter("phone", phone);
+
             return new PersonDTO(query.getSingleResult());
+        } catch (Exception e) {
+            throw new PersonNotFoundException("No person with phone number " + phone + " found");
         } finally {
             em.close();
         }
