@@ -9,6 +9,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 
 import lombok.NoArgsConstructor;
+import utils.EMF_Creator;
 
 import java.util.HashSet;
 import java.util.List;
@@ -94,6 +95,75 @@ public class PersonFacade {
             em.close();
         }
         return persons.size();
+    }
+
+    // Get the number of people given a hobby
+    public int getPersonCountByHobby(String hobby) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobby", Person.class);
+            query.setParameter("hobby", hobby);
+            return query.getResultList().size();
+        } finally {
+            em.close();
+        }
+    }
+
+    // Get persons living in a given zip code
+    public List<PersonDTO> getPersonsByZipCode(int zipCode) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.address a WHERE a.cityInfo.zipCode = :zipCode", Person.class);
+            query.setParameter("zipCode", zipCode);
+            return PersonDTO.getDTOs(query.getResultList());
+        } finally {
+            em.close();
+        }
+    }
+
+    // Get persons with a given hobby
+    public List<PersonDTO> getPersonsWithHobby(String hobby) {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p JOIN p.hobbies h WHERE h.name = :hobby", Person.class);
+            query.setParameter("hobby", hobby);
+            List<Person> persons = query.getResultList();
+            return PersonDTO.getDTOs(persons);
+        } finally {
+            em.close();
+        }
+    }
+
+    // Edit person
+    public PersonDTO editPerson(PersonDTO personDTO) {
+        EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Person person = em.find(Person.class, personDTO.getId());
+            if (personDTO.getFirstName() != null) {
+                person.setFirstName(personDTO.getFirstName());
+            }
+            if (personDTO.getLastName() != null) {
+                person.setLastName(personDTO.getLastName());
+            }
+            if (personDTO.getEmail() != null) {
+                person.setEmail(personDTO.getEmail());
+            }
+            em.getTransaction().commit();
+            return new PersonDTO(person);
+        } finally {
+            em.close();
+        }
+    }
+
+    public static void main(String[] args) {
+        emf = EMF_Creator.createEntityManagerFactory();
+        PersonFacade facade = getPersonFacade(emf);
+        PersonDTO personDTO = new PersonDTO();
+        personDTO.setId(2L);
+        personDTO.setFirstName("Jens");
+        personDTO.setLastName("Petersen");
+        facade.editPerson(personDTO);
     }
 
 }

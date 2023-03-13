@@ -5,9 +5,12 @@ import dtos.PersonDTO;
 import entities.CityInfo;
 import entities.Person;
 import lombok.NoArgsConstructor;
+import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @NoArgsConstructor
 public class CityInfoFacade {
@@ -50,6 +53,24 @@ public class CityInfoFacade {
         } finally {
             em.close();
         }
+    }
+
+    // Get all zip codes
+    public List<CityInfoDTO> getAllZipCodes () {
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<CityInfo> query = em.createQuery("SELECT c FROM CityInfo c", CityInfo.class);
+            List<CityInfo> cityInfoList = query.getResultList();
+            return CityInfoDTO.getDTOs(cityInfoList);
+        } finally {
+            em.close();
+        }
+    }
+
+    public static void main(String[] args) {
+        EntityManagerFactory emf = EMF_Creator.createEntityManagerFactory();
+        CityInfoFacade facade = CityInfoFacade.getCityInfoFacade(emf);
+        System.out.println(facade.getAllZipCodes().size());
     }
 
 }

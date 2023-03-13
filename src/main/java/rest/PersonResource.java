@@ -13,6 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("persons")
 public class PersonResource {
@@ -27,7 +28,7 @@ public class PersonResource {
             
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String demo() {
+    public String mdemo() {
         return "{\"msg\":\"Hello World\"}";
     }
 
@@ -41,5 +42,19 @@ public class PersonResource {
         address.setCityInfo(cityInfoFacade.getCityFromPerson(person));
         person.setAddress(address);
         return Response.ok().entity(GSON.toJson(person)).build();
+    }
+
+    @GET
+    @Path("/{hobby}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getPersonByHobby(@PathParam("hobby") String hobby) {
+        List<PersonDTO> personDTOs = personFacade.getPersonsWithHobby(hobby);
+        for (PersonDTO person : personDTOs) {
+            person.setHobbies(hobbyFacade.getAllHobbiesByPerson(person));
+            AddressDTO address = addressFacade.getAddressFromPerson(person);
+            address.setCityInfo(cityInfoFacade.getCityFromPerson(person));
+            person.setAddress(address);
+        }
+        return Response.ok().entity(GSON.toJson(personDTOs)).build();
     }
 }

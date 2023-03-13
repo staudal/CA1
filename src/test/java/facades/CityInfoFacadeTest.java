@@ -1,36 +1,31 @@
 package facades;
 
-import dtos.AddressDTO;
+import dtos.CityInfoDTO;
 import dtos.PersonDTO;
 import entities.*;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static rest.PersonResource.*;
 
-public class PersonFacadeTest {
+public class CityInfoFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static PersonFacade personFacade;
-    private static HobbyFacade hobbyFacade;
-    private static AddressFacade addressFacade;
     private static CityInfoFacade cityInfoFacade;
 
-    public PersonFacadeTest() {
+    public CityInfoFacadeTest() {
     }
 
     @BeforeAll
     public static void setUpClass() {
        emf = EMF_Creator.createEntityManagerFactoryForTest();
-       personFacade = PersonFacade.getPersonFacade(emf);
-       hobbyFacade = HobbyFacade.getHobbyFacade(emf);
-       addressFacade = AddressFacade.getAddressFacade(emf);
        cityInfoFacade = CityInfoFacade.getCityInfoFacade(emf);
     }
 
@@ -74,34 +69,11 @@ public class PersonFacadeTest {
         em.getTransaction().commit();
     }
 
-    // Test that checks if a person is created
+    // Counts the number of zip codes in DB
     @Test
-    public void testGetPersonByPhone() {
-        PersonDTO personDTO = personFacade.getPersonByPhone("12345678");
-        System.out.println(personDTO.getAddress().getStreet());
-    }
-
-    // Counts number of person with given hobby
-    @Test
-    public void testGetCountByHobby() {
-        int count = personFacade.getPersonCountByHobby("testHobby");
-        assertEquals(1, count);
-    }
-
-    // Counts number of person with given city
-    @Test
-    public void testGetCountByCity() {
-        List<PersonDTO> persons = personFacade.getPersonsByZipCode(1234);
-        assertEquals(1, persons.size());
-    }
-
-    // Updates a person's info
-    @Test
-    public void testUpdatePersonInfo() {
-        PersonDTO personDTO = new PersonDTO();
-        personDTO.setId(1L);
-        personDTO.setFirstName("Jane");
-        assertEquals("Jane", personFacade.editPerson(personDTO).getFirstName());
+    public void testGetAllZipCodes() {
+        List<CityInfoDTO> cityInfos = cityInfoFacade.getAllZipCodes();
+        assertEquals(1, cityInfos.size());
     }
 
 }
