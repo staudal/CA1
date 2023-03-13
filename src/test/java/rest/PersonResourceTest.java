@@ -57,7 +57,7 @@ public class PersonResourceTest {
 
     }
 
-    /*@Test
+    @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
         given().when().get("/persons").then().statusCode(200);
@@ -66,10 +66,34 @@ public class PersonResourceTest {
     @Test
     public void testPersonByPhone() throws Exception {
         given()
-                .contentType("application/json")
-                .get("/persons/person/12345678").then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("lastName", equalTo("Doe"));
-    }*/
+            .contentType("application/json")
+            .get("/persons/phone/12345678").then()
+            .assertThat()
+            .statusCode(HttpStatus.OK_200.getStatusCode())
+            .body("lastName", equalTo("lastName"));
+    }
+
+    @Test
+    public void testPersonByHobby() throws Exception {
+        given()
+            .contentType("application/json")
+            .expect()
+            .body("get(0).address.street", equalTo("Street"))
+            .when()
+            .get("/persons/hobby/swimming");
+    }
+
+    // Test add person
+    @Test
+    public void testAddPerson() throws Exception {
+        given()
+            .contentType("application/json")
+            .body("{\"firstName\":\"firstName\",\"lastName\":\"lastName\",\"email\":\"email\"}")
+            .when()
+            .post("/persons/add")
+            .then()
+            .assertThat()
+            .statusCode(HttpStatus.OK_200.getStatusCode())
+            .body("firstName", equalTo("firstName"));
+    }
 }

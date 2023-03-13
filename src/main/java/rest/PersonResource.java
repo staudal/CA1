@@ -57,4 +57,54 @@ public class PersonResource {
         }
         return Response.ok().entity(GSON.toJson(personDTOs)).build();
     }
+
+    @GET
+    @Path("/count/hobby/{hobby}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getPersonByHobbyCount(@PathParam("hobby") String hobby) {
+        List<PersonDTO> personDTOs = personFacade.getPersonsWithHobby(hobby);
+        int count = personDTOs.size();
+        return Response.ok().entity(GSON.toJson(count)).build();
+    }
+
+    @GET
+    @Path("/zip/{zip}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getPersonByZipCode(@PathParam("zip") String zipCode) {
+        List<PersonDTO> personDTOs = personFacade.getPersonsByZipCode(Integer.parseInt(zipCode));
+        for (PersonDTO person : personDTOs) {
+            person.setHobbies(hobbyFacade.getAllHobbiesByPerson(person));
+            AddressDTO address = addressFacade.getAddressFromPerson(person);
+            address.setCityInfo(cityInfoFacade.getCityFromPerson(person));
+            person.setAddress(address);
+        }
+        return Response.ok().entity(GSON.toJson(personDTOs)).build();
+    }
+
+    @GET
+    @Path("/zip/all")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllZipCodes() {
+        return Response.ok().entity(GSON.toJson(cityInfoFacade.getAllZipCodes())).build();
+    }
+
+    @PUT
+    @Path("/edit")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response editPerson(String person) {
+        PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
+        personFacade.editPerson(personDTO);
+        return Response.ok().entity(GSON.toJson(personDTO)).build();
+    }
+
+    @POST
+    @Path("/add")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response addPerson(String person) {
+        PersonDTO personDTO = GSON.fromJson(person, PersonDTO.class);
+        personFacade.create(personDTO);
+        return Response.ok().entity(GSON.toJson(personDTO)).build();
+    }
 }
